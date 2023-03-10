@@ -1,0 +1,42 @@
+syntax = "proto2";
+
+import "ines/vision/vision.proto";
+import "ines/referee/referee.proto";
+
+package ines;
+
+service Middleware {
+  rpc SetVision (SetVisionRequest) returns (SetVisionResponse) {}
+  rpc GetVision (GetVisionRequest) returns (GetVisionResponse) {}
+
+  rpc SetReferee (SetRefereeRequest) returns (SetRefereeResponse) {}
+  rpc GetReferee (GetRefereeRequest) returns (GetRefereeResponse) {}
+}
+
+message SetVisionRequest {
+  optional Vision vision = 1;
+}
+
+message SetVisionResponse {
+}
+
+message GetVisionRequest {
+}
+
+message GetVisionResponse {
+  optional Vision vision = 1;
+}
+
+message SetRefereeRequest {
+  optional Referee referee = 1;
+}
+
+message SetRefereeResponse {
+}
+
+message GetRefereeRequest {
+}
+
+message GetRefereeResponse {
+  optional Referee referee = 1;
+}
