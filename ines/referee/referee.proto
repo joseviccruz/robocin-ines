@@ -1,7 +1,0 @@
-syntax = "proto2";
-
-package ines;
-
-message Referee {
-  optional string data = 1;
-}

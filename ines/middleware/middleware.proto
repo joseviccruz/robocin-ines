@@ -1,9 +1,9 @@
-syntax = "proto2";
+syntax = "proto3";
 
-import "ines/vision/vision.proto";
-import "ines/referee/referee.proto";
+import "ines/common/messages/vision.proto";
+import "ines/common/messages/referee.proto";
 
-package ines;
+package ines.middleware;
 
 service Middleware {
   rpc SetVision (SetVisionRequest) returns (SetVisionResponse) {}
@@ -14,7 +14,7 @@ service Middleware {
 }
 
 message SetVisionRequest {
-  optional Vision vision = 1;
+  common.messages.Vision vision = 1;
 }
 
 message SetVisionResponse {
@@ -24,11 +24,11 @@ message GetVisionRequest {
 }
 
 message GetVisionResponse {
-  optional Vision vision = 1;
+  common.messages.Vision vision = 1;
 }
 
 message SetRefereeRequest {
-  optional Referee referee = 1;
+  common.messages.Referee referee = 1;
 }
 
 message SetRefereeResponse {
@@ -38,5 +38,5 @@ message GetRefereeRequest {
 }
 
 message GetRefereeResponse {
-  optional Referee referee = 1;
+  common.messages.Referee referee = 1;
 }

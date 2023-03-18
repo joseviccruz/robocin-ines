@@ -11,7 +11,7 @@
 using grpc::InsecureServerCredentials;
 using grpc::Server;
 using grpc::ServerBuilder;
-using ines::MiddlewareServiceImpl;
+using ines::middleware::MiddlewareServiceImpl;
 
 void runServer() {
   const std::string kServerAddress("0.0.0.0:50051");

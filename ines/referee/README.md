@@ -6,4 +6,4 @@ This directory contains the referee service.
 
     - Implement the referee service;
     - Create unit tests for the referee service;
-    - Update referee.proto with RoboCup SSL's referee protocol;
+    - Update common/messages/referee.proto with RoboCup SSL's referee protocol;

@@ -1,7 +1,0 @@
-syntax = "proto2";
-
-package ines;
-
-message Vision {
-  optional string data = 1;
-}

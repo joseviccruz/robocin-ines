@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "ines/common/messages/third_party/detection/geometry.proto";
+import "ines/common/messages/third_party/detection/raw.proto";
+
+package ines.common.messages.third_party.detection;
+
+message SSL_WrapperPacket {
+  optional SSL_DetectionFrame detection = 1;
+  optional SSL_GeometryData geometry = 2;
+}

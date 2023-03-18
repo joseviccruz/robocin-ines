@@ -1,0 +1,3 @@
+add_subdirectory(detection)
+add_subdirectory(game_controller)
+add_subdirectory(simulation)

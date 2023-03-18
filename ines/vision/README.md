@@ -6,4 +6,4 @@ This directory contains the vision service.
 
     - Implement the vision service;
     - Create unit tests for the vision service;
-    - Update vision.proto with RoboCup SSL's vision protocol;
+    - Update common/messages/vision.proto with RoboCup SSL's vision protocol;
