@@ -2,9 +2,9 @@
 
 # Set CMAKE_CXX_STANDARD to 20 to use C++20 by default.
 
-if(NOT CMAKE_CXX_STANDARD)
+if (NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 20)
-endif()
+endif ()
 
 message("-- Using C++: ${CMAKE_CXX_STANDARD}")
 
@@ -13,9 +13,9 @@ message("-- Using C++: ${CMAKE_CXX_STANDARD}")
 # Set CMAKE_EXPORT_COMPILE_COMMANDS to ON to generate a compile_commands.json file in the build directory by default
 # This file is used by clang tools such as clangd, clang-tidy and clang-format.
 
-if(NOT CMAKE_EXPORT_COMPILE_COMMANDS)
+if (NOT CMAKE_EXPORT_COMPILE_COMMANDS)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-endif()
+endif ()
 
 ########################################################################################################################
 
