@@ -1,8 +1,6 @@
 syntax = "proto2";
 
-package RoboCupSSL;
-
-option go_package = "github.com/RoboCup-SSL/ssl-vision-client/pkg/tracked";
+package ines.common.messages.third_party.game_controller;
 
 // A vector with two dimensions
 message Vector2 {

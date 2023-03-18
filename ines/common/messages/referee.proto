@@ -1,2 +1,5 @@
-// oneOf?
-// { [something], robocup }
+syntax = "proto3";
+
+package ines.common.messages;
+
+message Referee {}

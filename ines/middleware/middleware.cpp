@@ -4,7 +4,7 @@
 
 #include "ines/middleware/middleware.h"
 
-namespace ines {
+namespace ines::middleware {
 namespace {
 
 using ::grpc::ServerContext;
@@ -44,4 +44,4 @@ Status MiddlewareServiceImpl::GetReferee([[maybe_unused]] ServerContext* context
   return Status::OK;
 }
 
-} // namespace ines
+} // namespace ines::middleware

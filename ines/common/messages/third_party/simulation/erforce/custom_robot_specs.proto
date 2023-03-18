@@ -1,14 +1,13 @@
 syntax = "proto2";
 
-package RoboCupSSL;
-
-option go_package = "github.com/RoboCup-SSL/ssl-simulation-controller/internal/simctl";
+package ines.common.messages.third_party.simulation.erforce;
 
 // Custom robot specs for ER-Force simulator
 message RobotSpecErForce {
   // The distance [m] from the robot center to the ball, when the ball is as close as possible to the robot.
   // The ball may be a little bit inside the robot when looking from top, due to the dimensions of the dribbler.
   optional float shoot_radius = 1;
+
   // The height of the dribbling bar from the ground [m]
   // required float dribbler_height = 2;
 
@@ -21,6 +20,7 @@ message RobotSpecErForce {
   // D) A robot that might such the ball under the mesh and flip over.
   // As none of those sound appealing, we disabled configuring the dribbler height for now.
   reserved 2;
+
   // The width of the dribbler itself (where the ball can be controlled), without the mechanical frame [m].
   optional float dribbler_width = 3;
 }

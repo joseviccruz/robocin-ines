@@ -9,7 +9,7 @@
 
 #include "ines/middleware/middleware.grpc.pb.h"
 
-namespace ines {
+namespace ines::middleware {
 
 class MiddlewareServiceImpl final : public Middleware::Service {
  public:
@@ -29,12 +29,12 @@ class MiddlewareServiceImpl final : public Middleware::Service {
 
  private:
   absl::Mutex vision_mutex_;
-  Vision vision_data_;
+  common::messages::Vision vision_data_;
 
   absl::Mutex referee_mutex_;
-  Referee referee_data_;
+  common::messages::Referee referee_data_;
 };
 
-} // namespace ines
+} // namespace ines::middleware
 
 #endif // INES_MIDDLEWARE_H

@@ -1,11 +1,10 @@
 syntax = "proto2";
 
-package RoboCupSSL;
-
-option go_package = "github.com/RoboCup-SSL/ssl-simulation-protocol/pkg/sim";
-
-import "ssl_simulation_error.proto";
 import "google/protobuf/any.proto";
+
+import "ines/common/messages/third_party/simulation/error.proto";
+
+package ines.common.messages.third_party.simulation;
 
 // Feedback from a robot
 message RobotFeedback {

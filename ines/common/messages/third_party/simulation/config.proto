@@ -1,12 +1,11 @@
 syntax = "proto2";
 
-package RoboCupSSL;
-
-option go_package = "github.com/RoboCup-SSL/ssl-simulation-protocol/pkg/sim";
-
-import "ssl_gc_common.proto";
-import "ssl_vision_geometry.proto";
 import "google/protobuf/any.proto";
+
+import "ines/common/messages/third_party/detection/geometry.proto";
+import "ines/common/messages/third_party/game_controller/common.proto";
+
+package ines.common.messages.third_party.simulation;
 
 // Movement limits for a robot
 message RobotLimits {
@@ -41,7 +40,7 @@ message RobotWheelAngles {
 // Specs of a robot
 message RobotSpecs {
   // Id of the robot
-  required RobotId id = 1;
+  required game_controller.RobotId id = 1;
   // Robot radius [m]
   optional float radius = 2 [default = 0.09];
   // Robot height [m]
@@ -70,7 +69,7 @@ message RealismConfig {
 // Change the simulator configuration
 message SimulatorConfig {
   // Update the geometry
-  optional SSL_GeometryData geometry = 1;
+  optional detection.SSL_GeometryData geometry = 1;
   // Update the robot specs
   repeated RobotSpecs robot_specs = 2;
   // Update realism configuration

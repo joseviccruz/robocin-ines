@@ -1,8 +1,6 @@
 syntax = "proto2";
 
-package RoboCupSSL;
-
-option go_package = "github.com/RoboCup-SSL/ssl-simulation-protocol/pkg/sim";
+package ines.common.messages.third_party.simulation;
 
 // Errors in the simulator
 message SimulatorError {

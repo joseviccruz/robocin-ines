@@ -1,12 +1,10 @@
 syntax = "proto2";
 
-package RoboCupSSL;
+import "ines/common/messages/third_party/game_controller/common.proto";
+import "ines/common/messages/third_party/simulation/config.proto";
+import "ines/common/messages/third_party/simulation/error.proto";
 
-option go_package = "github.com/RoboCup-SSL/ssl-simulation-protocol/pkg/sim";
-
-import "ssl_gc_common.proto";
-import "ssl_simulation_config.proto";
-import "ssl_simulation_error.proto";
+package ines.common.messages.third_party.simulation;
 
 // Teleport the ball to a new location and optionally set it to some velocity
 message TeleportBall {
@@ -40,7 +38,7 @@ message TeleportBall {
 // Teleport a robot to some location and give it a velocity
 message TeleportRobot {
   // Robot id to teleport
-  required RobotId id = 1;
+  required game_controller.RobotId id = 1;
   // x-coordinate [m]
   optional float x = 2;
   // y-coordinate [m]

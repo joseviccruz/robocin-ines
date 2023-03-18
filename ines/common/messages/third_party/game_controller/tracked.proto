@@ -1,11 +1,9 @@
 syntax = "proto2";
 
-package RoboCupSSL;
+import "ines/common/messages/third_party/game_controller/common.proto";
+import "ines/common/messages/third_party/game_controller/geometry.proto";
 
-option go_package = "github.com/RoboCup-SSL/ssl-vision-client/pkg/tracked";
-
-import "ssl_gc_common.proto";
-import "ssl_gc_geometry.proto";
+package ines.common.messages.third_party.game_controller;
 
 // Default network address: 224.5.23.2:10010
 

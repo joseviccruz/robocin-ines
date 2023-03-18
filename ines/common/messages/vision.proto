@@ -1,2 +1,5 @@
-// oneOf?
-// { [something], robocup_raw, robocup_tracked }
+syntax = "proto3";
+
+package ines.common.messages;
+
+message Vision {}
