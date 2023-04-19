@@ -76,3 +76,14 @@ find_package(benchmark CONFIG REQUIRED HINTS "/opt/benchmark")
 message(STATUS "Using Google Benchmark: ${benchmark_VERSION}")
 
 ########################################################################################################################
+
+# Find cppzmq package
+# It enable the following variables:
+#   cppzmq                                the cppzmq library
+
+# Find cppzmq installation
+# Looks for cppzmq cmake config files installed by cppzmq's cmake installation.
+find_package(cppzmq CONFIG REQUIRED HINTS "/opt/cppzmq")
+message(STATUS "Using cppzmq: ${cppzmq_VERSION}")
+
+########################################################################################################################

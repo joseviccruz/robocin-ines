@@ -1,1 +1,1 @@
-FROM robocin/cpp-ubuntu-latest:latest
+FROM robocin/robocin-ines:manual-wip
