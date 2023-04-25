@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ines;
+
+message Point2D {
+  float x = 1;
+  float y = 2;
+}
+
+message Point3D {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}

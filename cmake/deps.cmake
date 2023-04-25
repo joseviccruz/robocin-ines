@@ -83,6 +83,7 @@ message(STATUS "Using Google Benchmark: ${benchmark_VERSION}")
 
 # Find cppzmq installation
 # Looks for cppzmq cmake config files installed by cppzmq's cmake installation.
+find_package(ZeroMQ CONFIG REQUIRED HINTS "/opt/libzmq")
 find_package(cppzmq CONFIG REQUIRED HINTS "/opt/cppzmq")
 message(STATUS "Using cppzmq: ${cppzmq_VERSION}")
 

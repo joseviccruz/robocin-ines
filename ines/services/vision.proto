@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "ines/services/common.proto";
+
+package ines.vision;
+
+message Ball {
+  Point3D position = 2;
+  Point3D velocity = 3;
+}
+
+message Robot {
+  int32 id = 2;
+
+  Point2D position = 3;
+  float angle = 4;
+  Point2D velocity = 5;
+  float angular_velocity = 6;
+}
+
+message Field {
+  uint64 id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+
+  float length = 3;
+  float width = 4;
+  float goal_depth = 5;
+  float goal_width = 6;
+  float penalty_area_depth = 7;
+  float penalty_area_width = 8;
+  float goal_center_to_penalty_mark = 9;
+}
+
+message Frame {
+  uint64 id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+
+  repeated string source_ids = 3; // IDs of the sources that contributed to this frame: camera, ir, telemetry, etc.
+
+  Ball ball = 4;
+  repeated Robot teammates = 5;
+  repeated Robot opponents = 6;
+}
