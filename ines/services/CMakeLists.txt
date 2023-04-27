@@ -26,9 +26,22 @@ robocin_cpp_executable(
 )
 
 robocin_cpp_executable(
+    NAME referee
+    SRCS referee_main.cpp
+    DEPS zmq_publish_subscribe
+         referee_proto_lib
+         common_proto_lib
+         absl::time
+         absl::random_random
+         absl::strings
+         utility
+)
+
+robocin_cpp_executable(
     NAME client
     SRCS client_main.cpp
     DEPS zmq_publish_subscribe
+         referee_proto_lib
          vision_proto_lib
          common_proto_lib
          absl::time
