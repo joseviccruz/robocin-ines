@@ -18,3 +18,10 @@ robocin_cpp_library(
     SRCS zmq_publish_subscribe.cpp
     DEPS publish_subscribe cppzmq
 )
+
+robocin_cpp_library(
+    NAME utility
+    HDRS utility.h
+    SRCS utility.cpp
+    DEPS protobuf::libprotobuf absl::time
+)

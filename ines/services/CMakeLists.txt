@@ -22,6 +22,7 @@ robocin_cpp_executable(
          absl::time
          absl::random_random
          absl::strings
+         utility
 )
 
 robocin_cpp_executable(
@@ -34,4 +35,5 @@ robocin_cpp_executable(
          absl::synchronization
          absl::random_random
          absl::strings
+         utility
 )

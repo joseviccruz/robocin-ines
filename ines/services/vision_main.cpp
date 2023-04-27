@@ -10,6 +10,7 @@
 #include <google/protobuf/timestamp.pb.h>
 
 #include "ines/common/publish_subscribe.h"
+#include "ines/common/utility.h"
 #include "ines/common/zmq_publish_subscribe.h"
 #include "ines/services/common.pb.h"
 #include "ines/services/vision.pb.h"
@@ -18,6 +19,7 @@
 
 using ines::ITopicPublisher;
 using ines::PubSubMode;
+using ines::timestampFromTime;
 using ines::ZmqPublisher;
 using ines::vision::Ball;
 using ines::vision::Field;
@@ -35,14 +37,6 @@ static constexpr float kGoalCenterToPenaltyMark = 6000.0F;
 static constexpr double k240HzInMs = 1000.0 / 240.0;
 
 absl::BitGen bitgen;
-
-google::protobuf::Timestamp getNow() {
-  google::protobuf::Timestamp result;
-  absl::Time now = absl::Now();
-  result.set_seconds(absl::ToUnixSeconds(now));
-  result.set_nanos(static_cast<int32_t>(absl::ToUnixNanos(now) % 1'000'000'000L));
-  return result;
-}
 
 float getRandomX() {
   static constexpr float kHalfFieldLength = kFieldLength / 2.0F;
@@ -63,7 +57,7 @@ float getRandomAngle() {
 Field getDivBField(uint64_t id) {
   Field result;
   result.set_id(id);
-  *result.mutable_timestamp() = getNow();
+  *result.mutable_timestamp() = timestampFromTime(absl::Now());
 
   result.set_length(kFieldLength);
   result.set_width(kFieldWidth);
@@ -108,7 +102,7 @@ Robot getMockedRobot(int id) {
 Frame getMockedFrame(uint64_t id) {
   Frame result;
   result.set_id(id);
-  *result.mutable_timestamp() = getNow();
+  *result.mutable_timestamp() = timestampFromTime(absl::Now());
 
   result.add_source_ids("robot_0_ir");
   result.add_source_ids("camera_1");
