@@ -21,19 +21,30 @@ message Command {
   message Play {}
   message Stop {}
 
-  message BallPlacement { Point2D position = 1; google.protobuf.Duration remaining_time = 2; } // H/A
+  message BallPlacement {
+    Point2D position = 1;
+    google.protobuf.Duration remaining_time = 2;
+  } // H/A
 
   message PrepareKickoff {} // H/A
-  message Kickoff { google.protobuf.Duration remaining_time = 1; } // H/A
+  message Kickoff {
+    google.protobuf.Duration remaining_time = 1;
+  } // H/A
 
   message PreparePenalty {} // H/A
-  message Penalty { google.protobuf.Duration remaining_time = 1; } // H/A
+  message Penalty {
+    google.protobuf.Duration remaining_time = 1;
+  } // H/A
 
   message PrepareDirectFreeKick {} // H/A
-  message DirectFreeKick { google.protobuf.Duration remaining_time = 1; } // H/A
+  message DirectFreeKick {
+    google.protobuf.Duration remaining_time = 1;
+  } // H/A
 
   message PrepareIndirectFreeKick {} // H/A
-  message IndirectFreeKick { google.protobuf.Duration remaining_time = 1; } // H/A
+  message IndirectFreeKick {
+    google.protobuf.Duration remaining_time = 1;
+  } // H/A
 
   message Timeout {} // H/A
 
@@ -76,8 +87,8 @@ message Command {
 
 message Status {
   uint64 id = 1;
-  google.protobuf.Timestamp event_timestamp = 2;
-  google.protobuf.Timestamp message_timestamp = 3;
+  google.protobuf.Timestamp timestamp = 2;
+  google.protobuf.Timestamp event_timestamp = 3;
 
   Team home_team = 4;
   Team away_team = 5;

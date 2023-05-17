@@ -7,6 +7,8 @@
 
 namespace ines {
 
+::google::protobuf::Timestamp timestampFromNanos(int64_t nanos);
+
 ::google::protobuf::Timestamp timestampFromTime(const ::absl::Time& time);
 
 ::absl::Time timeFromTimestamp(const ::google::protobuf::Timestamp& timestamp);

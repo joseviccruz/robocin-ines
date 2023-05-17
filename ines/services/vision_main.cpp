@@ -19,7 +19,7 @@
 
 using ines::ITopicPublisher;
 using ines::PubSubMode;
-using ines::timestampFromTime;
+using ines::timestampFromNanos;
 using ines::ZmqPublisher;
 using ines::vision::Ball;
 using ines::vision::Field;
@@ -57,7 +57,7 @@ float getRandomAngle() {
 Field getDivBField(uint64_t id) {
   Field result;
   result.set_id(id);
-  *result.mutable_timestamp() = timestampFromTime(absl::Now());
+  *result.mutable_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
 
   result.set_length(kFieldLength);
   result.set_width(kFieldWidth);
@@ -102,13 +102,13 @@ Robot getMockedRobot(int id) {
 Frame getMockedFrame(uint64_t id) {
   Frame result;
   result.set_id(id);
-  *result.mutable_timestamp() = timestampFromTime(absl::Now());
+  *result.mutable_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
 
-  result.add_source_ids("robot_0_ir");
-  result.add_source_ids("camera_1");
-  result.add_source_ids("camera_2");
-  result.add_source_ids("camera_3");
-  result.add_source_ids("camera_4");
+  // result.add_source_ids("robot_0_ir");
+  // result.add_source_ids("camera_1");
+  // result.add_source_ids("camera_2");
+  // result.add_source_ids("camera_3");
+  // result.add_source_ids("camera_4");
 
   *result.mutable_ball() = getMockedBall();
   for (int i : std::ranges::iota_view(0, 6)) {

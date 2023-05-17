@@ -1,8 +1,10 @@
 #include <absl/time/clock.h>
+#include <memory>
 #include <ranges>
 
 #include <absl/random/distributions.h>
 #include <absl/random/random.h>
+#include <type_traits>
 
 #include "ines/common/publish_subscribe.h"
 #include "ines/common/utility.h"
@@ -11,7 +13,7 @@
 
 using ines::ITopicPublisher;
 using ines::PubSubMode;
-using ines::timestampFromTime;
+using ines::timestampFromNanos;
 using ines::ZmqPublisher;
 using ines::referee::Command;
 using ines::referee::Status;
@@ -35,44 +37,129 @@ Team getMockedTeam(std::string_view name) {
 }
 
 Command getMockedCommand(Command::CommandCase command_case) {
-  Command command;
-
-  switch (command_case) {
-    case Command::kHalt: command.mutable_halt(); break;
-    case Command::kPlay: command.mutable_play(); break;
-    case Command::kStop: command.mutable_stop(); break;
-    case Command::kHomeBallPlacement: command.mutable_home_ball_placement(); break;
-    case Command::kAwayBallPlacement: command.mutable_away_ball_placement(); break;
-    case Command::kHomePrepareKickoff: command.mutable_home_prepare_kickoff(); break;
-    case Command::kAwayPrepareKickoff: command.mutable_away_prepare_kickoff(); break;
-    case Command::kHomeKickoff: command.mutable_home_kickoff(); break;
-    case Command::kAwayKickoff: command.mutable_away_kickoff(); break;
-    case Command::kHomePreparePenalty: command.mutable_home_prepare_penalty(); break;
-    case Command::kAwayPreparePenalty: command.mutable_away_prepare_penalty(); break;
-    case Command::kHomePenalty: command.mutable_home_penalty(); break;
-    case Command::kAwayPenalty: command.mutable_away_penalty(); break;
-    case Command::kHomePrepareDirectFreeKick:
-      command.mutable_home_prepare_direct_free_kick();
-      break;
-    case Command::kAwayPrepareDirectFreeKick:
-      command.mutable_away_prepare_direct_free_kick();
-      break;
-    case Command::kHomeDirectFreeKick: command.mutable_home_direct_free_kick(); break;
-    case Command::kAwayDirectFreeKick: command.mutable_away_direct_free_kick(); break;
-    case Command::kHomePrepareIndirectFreeKick:
-      command.mutable_home_prepare_indirect_free_kick();
-      break;
-    case Command::kAwayPrepareIndirectFreeKick:
-      command.mutable_away_prepare_indirect_free_kick();
-      break;
-    case Command::kHomeIndirectFreeKick: command.mutable_home_indirect_free_kick(); break;
-    case Command::kAwayIndirectFreeKick: command.mutable_away_indirect_free_kick(); break;
-    case Command::kHomeTimeout: command.mutable_home_timeout(); break;
-    case Command::kAwayTimeout: command.mutable_away_timeout(); break;
-    case Command::kInterval: command.mutable_interval(); break;
-    default: command.mutable_halt(); break;
+  if (command_case == Command::kHalt) {
+    Command command;
+    command.mutable_halt();
+    return command;
+  }
+  if (command_case == Command::kPlay) {
+    Command command;
+    command.mutable_play();
+    return command;
+  }
+  if (command_case == Command::kStop) {
+    Command command;
+    command.mutable_stop();
+    return command;
+  }
+  if (command_case == Command::kHomeBallPlacement) {
+    Command command;
+    command.mutable_home_ball_placement();
+    return command;
+  }
+  if (command_case == Command::kAwayBallPlacement) {
+    Command command;
+    command.mutable_away_ball_placement();
+    return command;
+  }
+  if (command_case == Command::kHomePrepareKickoff) {
+    Command command;
+    command.mutable_home_prepare_kickoff();
+    return command;
+  }
+  if (command_case == Command::kAwayPrepareKickoff) {
+    Command command;
+    command.mutable_away_prepare_kickoff();
+    return command;
+  }
+  if (command_case == Command::kHomeKickoff) {
+    Command command;
+    command.mutable_home_kickoff();
+    return command;
+  }
+  if (command_case == Command::kAwayKickoff) {
+    Command command;
+    command.mutable_away_kickoff();
+    return command;
+  }
+  if (command_case == Command::kHomePreparePenalty) {
+    Command command;
+    command.mutable_home_prepare_penalty();
+    return command;
+  }
+  if (command_case == Command::kAwayPreparePenalty) {
+    Command command;
+    command.mutable_away_prepare_penalty();
+    return command;
+  }
+  if (command_case == Command::kHomePenalty) {
+    Command command;
+    command.mutable_home_penalty();
+    return command;
+  }
+  if (command_case == Command::kAwayPenalty) {
+    Command command;
+    command.mutable_away_penalty();
+    return command;
+  }
+  if (command_case == Command::kHomePrepareDirectFreeKick) {
+    Command command;
+    command.mutable_home_prepare_direct_free_kick();
+    return command;
+  }
+  if (command_case == Command::kAwayPrepareDirectFreeKick) {
+    Command command;
+    command.mutable_away_prepare_direct_free_kick();
+    return command;
+  }
+  if (command_case == Command::kHomeDirectFreeKick) {
+    Command command;
+    command.mutable_home_direct_free_kick();
+    return command;
+  }
+  if (command_case == Command::kAwayDirectFreeKick) {
+    Command command;
+    command.mutable_away_direct_free_kick();
+    return command;
+  }
+  if (command_case == Command::kHomePrepareIndirectFreeKick) {
+    Command command;
+    command.mutable_home_prepare_indirect_free_kick();
+    return command;
+  }
+  if (command_case == Command::kAwayPrepareIndirectFreeKick) {
+    Command command;
+    command.mutable_away_prepare_indirect_free_kick();
+    return command;
+  }
+  if (command_case == Command::kHomeIndirectFreeKick) {
+    Command command;
+    command.mutable_home_indirect_free_kick();
+    return command;
+  }
+  if (command_case == Command::kAwayIndirectFreeKick) {
+    Command command;
+    command.mutable_away_indirect_free_kick();
+    return command;
+  }
+  if (command_case == Command::kHomeTimeout) {
+    Command command;
+    command.mutable_home_timeout();
+    return command;
+  }
+  if (command_case == Command::kAwayTimeout) {
+    Command command;
+    command.mutable_away_timeout();
+    return command;
+  }
+  if (command_case == Command::kInterval) {
+    Command command;
+    command.mutable_interval();
+    return command;
   }
 
+  Command command;
+  command.mutable_halt();
   return command;
 }
 
@@ -84,7 +171,7 @@ int main() {
 
   while (true) {
     Status status;
-    *status.mutable_event_timestamp() = timestampFromTime(absl::Now());
+    *status.mutable_event_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
     *status.mutable_home_team() = getMockedTeam("Home");
     *status.mutable_away_team() = getMockedTeam("Away");
 
@@ -92,7 +179,7 @@ int main() {
     *status.mutable_command() = getMockedCommand(command_case);
 
     for ([[maybe_unused]] int reps : std::ranges::iota_view(0, 16)) {
-      *status.mutable_message_timestamp() = timestampFromTime(absl::Now());
+      *status.mutable_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
 
       status.set_id(total);
       status.set_total_commands(total);

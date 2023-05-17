@@ -36,8 +36,6 @@ message Frame {
   uint64 id = 1;
   google.protobuf.Timestamp timestamp = 2;
 
-  repeated string source_ids = 3; // IDs of the sources that contributed to this frame: camera, ir, telemetry, etc.
-
   Ball ball = 4;
   repeated Robot teammates = 5;
   repeated Robot opponents = 6;

@@ -76,7 +76,7 @@ int main() {
       if (referee_subscriber->receive(PubSubMode::DontWait, status)) {
         absl::MutexLock lock(&mutex);
 
-        auto duration = absl::Now() - timeFromTimestamp(status.message_timestamp());
+        auto duration = absl::Now() - timeFromTimestamp(status.timestamp());
         int64_t current_ns = absl::ToInt64Nanoseconds(duration);
         std::cout << "referee delay: " << current_ns / 1e6 << std::endl;
         // std::cout << "referee: " << status.DebugString();
