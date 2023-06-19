@@ -23,6 +23,7 @@ robocin_cpp_executable(
          absl::random_random
          absl::strings
          utility
+         ssl_vision_proto_lib
 )
 
 robocin_cpp_executable(
