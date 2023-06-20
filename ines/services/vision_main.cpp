@@ -105,7 +105,7 @@ int main() {
         robot.set_angle(robot_blue.orientation());
         robot.mutable_position()->set_x(robot_blue.x());
         robot.mutable_position()->set_y(robot_blue.y());
-        *frame.add_teammates() = robot;
+        *frame.add_opponents() = robot;
       }
 
       for (const auto& ball : packet.detection().balls()) {
