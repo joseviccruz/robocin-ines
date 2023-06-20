@@ -90,7 +90,7 @@ int main() {
       Frame frame;
       *frame.mutable_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
 
-      for (auto robot_yellow : packet.detection().robots_yellow()) {
+      for (const auto& robot_yellow : packet.detection().robots_yellow()) {
         Robot robot;
         robot.set_id(robot_yellow.robot_id());
         robot.set_angle(robot_yellow.orientation());
@@ -99,7 +99,7 @@ int main() {
         *frame.add_teammates() = robot;
       }
 
-      for (auto robot_blue : packet.detection().robots_blue()) {
+      for (const auto& robot_blue : packet.detection().robots_blue()) {
         Robot robot;
         robot.set_id(robot_blue.robot_id());
         robot.set_angle(robot_blue.orientation());
@@ -108,7 +108,7 @@ int main() {
         *frame.add_teammates() = robot;
       }
 
-      for (auto ball : packet.detection().balls()) {
+      for (const auto& ball : packet.detection().balls()) {
         Ball ball_msg;
         ball_msg.mutable_position()->set_x(ball.x());
         ball_msg.mutable_position()->set_y(ball.y());
@@ -119,7 +119,6 @@ int main() {
       if (packet.has_geometry()) {
         SSL_GeometryFieldSize field_size = packet.geometry().field();
         Field field;
-        *field.mutable_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
         field.set_length(field_size.field_length());
         field.set_width(field_size.field_width());
         field.set_goal_depth(field_size.goal_depth());
@@ -127,9 +126,9 @@ int main() {
         field.set_penalty_area_depth(field_size.penalty_area_depth());
         field.set_penalty_area_width(field_size.penalty_area_width());
         field.set_goal_center_to_penalty_mark(field_size.goal_center_to_penalty_mark());
+        *field.mutable_timestamp() = timestampFromNanos(absl::GetCurrentTimeNanos());
         publisher->send("field", PubSubMode::DontWait, field);
       }
-
     } else {
       std::cout << "Failed to parse packet." << std::endl;
     }
