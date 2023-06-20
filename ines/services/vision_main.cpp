@@ -1,15 +1,6 @@
-#include <chrono>
-#include <numbers>
-#include <ranges>
-
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-
-#include <absl/random/distributions.h>
-#include <absl/random/random.h>
-#include <absl/time/clock.h>
-#include <absl/time/time.h>
 
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
@@ -25,23 +16,8 @@
 #include "google/protobuf/util/time_util.h"
 
 using ines::ITopicPublisher;
-using ines::PubSubMode;
-using ines::timestampFromNanos;
+// using ines::PubSubMode;
 using ines::ZmqPublisher;
-using ines::vision::Ball;
-using ines::vision::Field;
-using ines::vision::Frame;
-using ines::vision::Robot;
-
-static constexpr float kFieldLength = 9000.0F;
-static constexpr float kFieldWidth = 6000.0F;
-static constexpr float kGoalDepth = 180.0F;
-static constexpr float kGoalWidth = 1000.0F;
-static constexpr float kPenaltyAreaDepth = 1000.0F;
-static constexpr float kPenaltyAreaWidth = 2000.0F;
-static constexpr float kGoalCenterToPenaltyMark = 6000.0F;
-
-static constexpr double k240HzInMs = 1000.0 / 240.0;
 
 constexpr int kBufferSize = 1024;
 constexpr int kPort = 10006;
@@ -58,13 +34,25 @@ int main() {
 
   sockaddr_in server_address{};
   server_address.sin_family = AF_INET;
-  server_address.sin_addr.s_addr = inet_addr("192.168.1.18");
+  server_address.sin_addr.s_addr = htonl(INADDR_ANY);
   server_address.sin_port = htons(kPort);
 
-  if (bind(sockfd,
-           static_cast<sockaddr*>(static_cast<void*>(&server_address)),
-           sizeof(server_address)) < 0) {
+  if (bind(sockfd, reinterpret_cast<sockaddr*>(&server_address), sizeof(server_address)) < 0) {
     std::cerr << "Failed to bind socket." << std::endl;
+    close(sockfd);
+    return 1;
+  }
+
+  ip_mreq multicast_request{};
+  multicast_request.imr_multiaddr.s_addr = inet_addr("224.5.23.2");
+  multicast_request.imr_interface.s_addr = htonl(INADDR_ANY);
+  if (setsockopt(sockfd,
+                 IPPROTO_IP,
+                 IP_ADD_MEMBERSHIP,
+                 reinterpret_cast<char*>(&multicast_request),
+                 sizeof(multicast_request)) < 0) {
+    std::cerr << "Failed to join multicast group." << std::endl;
+    close(sockfd);
     return 1;
   }
 
@@ -73,24 +61,42 @@ int main() {
   socklen_t client_len = sizeof(client_address);
 
   while (true) {
+    std::cout << "Receiving..." << std::endl;
+
     ssize_t received = recvfrom(sockfd,
-                                &buffer,
+                                buffer.data(),
                                 kBufferSize,
                                 0,
-                                static_cast<sockaddr*>(static_cast<void*>(&client_address)),
+                                reinterpret_cast<sockaddr*>(&client_address),
                                 &client_len);
+
     if (received < 0) {
-      std::cerr << "Error in receiving data." << std::endl;
+      std::cerr << "Error in receiving data. Error code: " << errno << std::endl;
       continue;
     }
+
+    char client_ip[INET_ADDRSTRLEN];
+    if (inet_ntop(AF_INET, &(client_address.sin_addr), client_ip, INET_ADDRSTRLEN) == nullptr) {
+      std::cerr << "Error converting client address to string." << std::endl;
+      continue;
+    }
+
+    std::cout << "Received data from " << client_ip << ":" << ntohs(client_address.sin_port)
+              << std::endl;
 
     SSL_WrapperPacket packet;
-    if (!packet.ParseFromArray(buffer, received)) {
-      std::cerr << "Failed to parse SSL_WrapperPacket." << std::endl;
-      continue;
+    if (packet.ParseFromArray(buffer.data(), static_cast<int>(received))) {
+      if (packet.has_detection()) {
+        std::cout << "Received detection packet." << std::endl;
+      }
+
+      if (packet.has_geometry()) {
+        std::cout << "Received geometry packet." << std::endl;
+      }
     }
 
-    std::cout << "Number of detected robots: " << packet.detection().robots().size() << std::endl;
+    // Clear the buffer for the next receive operation
+    std::memset(buffer.data(), 0, kBufferSize);
   }
 
   close(sockfd);
