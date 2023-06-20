@@ -22,7 +22,7 @@ using ines::ITopicPublisher;
 // using ines::PubSubMode;
 using ines::ZmqPublisher;
 
-constexpr int kBufferSize = 1024;
+constexpr int kBufferSize = 4096;
 constexpr int kPort = 10006;
 
 int main() {
@@ -70,8 +70,6 @@ int main() {
       continue;
     }
 
-    // std::cout << "Received packet from " << inet_ntoa(sender.sin_addr) << ": "
-    //           << std::string(buffer.data(), received) << std::endl;
     SSL_WrapperPacket packet;
     if (packet.ParseFromArray(buffer.data(), static_cast<int>(received))) {
       if (packet.has_detection()) {

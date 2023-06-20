@@ -68,8 +68,8 @@ sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(multic
 
 # Receive and process packets indefinitely
 while True:
-    data, sender = sock.recvfrom(1024)
-    print(f"Received packet from {sender}: {data}")
+    data, sender = sock.recvfrom()
+    print(f"Received packet from {sender}: {data}  ----- {len(data)}")
 
 # Close the socket (this won't be reached in this example)
 sock.close()
