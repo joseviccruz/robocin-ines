@@ -15,6 +15,9 @@
 
 #include "google/protobuf/util/time_util.h"
 
+#include <net/if.h>
+#include <sys/ioctl.h>
+
 using ines::ITopicPublisher;
 // using ines::PubSubMode;
 using ines::ZmqPublisher;
@@ -23,67 +26,52 @@ constexpr int kBufferSize = 1024;
 constexpr int kPort = 10006;
 
 int main() {
-  std::unique_ptr<ITopicPublisher> publisher = std::make_unique<ZmqPublisher>();
-  publisher->bind("ipc:///tmp/vision.ipc");
+  // Define the multicast group and port
+  std::string multicast_group = "224.5.23.2";
+  int multicast_port = 10006;
 
-  int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-  if (sockfd < 0) {
-    std::cerr << "Failed to create socket." << std::endl;
-    return 1;
-  }
+  // Define the network interface information
+  std::string interface_address = "192.168.1.18";
+  std::string interface_name = "wlp60s0";
 
-  sockaddr_in server_address{};
-  server_address.sin_family = AF_INET;
-  server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-  server_address.sin_port = htons(kPort);
+  // Create a UDP socket
+  int sock = socket(AF_INET, SOCK_DGRAM, 0);
 
-  if (bind(sockfd, reinterpret_cast<sockaddr*>(&server_address), sizeof(server_address)) < 0) {
-    std::cerr << "Failed to bind socket." << std::endl;
-    close(sockfd);
-    return 1;
-  }
+  // Set the socket options to enable multicast and specify the network interface
+  int reuse_addr = 1;
+  setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
 
-  ip_mreq multicast_request{};
-  multicast_request.imr_multiaddr.s_addr = inet_addr("224.5.23.2");
-  multicast_request.imr_interface.s_addr = htonl(INADDR_ANY);
-  if (setsockopt(sockfd,
-                 IPPROTO_IP,
-                 IP_ADD_MEMBERSHIP,
-                 reinterpret_cast<char*>(&multicast_request),
-                 sizeof(multicast_request)) < 0) {
-    std::cerr << "Failed to join multicast group." << std::endl;
-    close(sockfd);
-    return 1;
-  }
+  struct sockaddr_in bind_address {};
+  memset(&bind_address, 0, sizeof(bind_address));
+  bind_address.sin_family = AF_INET;
+  bind_address.sin_port = htons(multicast_port);
+  bind_address.sin_addr.s_addr = inet_addr(multicast_group.c_str());
+  bind(sock, (struct sockaddr*) &bind_address, sizeof(bind_address));
 
-  std::array<char, kBufferSize> buffer{};
-  sockaddr_in client_address{};
-  socklen_t client_len = sizeof(client_address);
+  struct ip_mreqn mreq {};
+  memset(&mreq, 0, sizeof(mreq));
+  mreq.imr_multiaddr.s_addr = inet_addr(multicast_group.c_str());
+  mreq.imr_address.s_addr = inet_addr(interface_address.c_str());
+  setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, &mreq, sizeof(mreq));
 
+  // Receive and process packets indefinitely
   while (true) {
-    std::cout << "Receiving..." << std::endl;
-
-    ssize_t received = recvfrom(sockfd,
+    std::array<char, kBufferSize> buffer = {};
+    struct sockaddr_in sender {};
+    socklen_t sender_len = sizeof(sender);
+    ssize_t received = recvfrom(sock,
                                 buffer.data(),
                                 kBufferSize,
                                 0,
-                                reinterpret_cast<sockaddr*>(&client_address),
-                                &client_len);
+                                reinterpret_cast<sockaddr*>(&sender),
+                                &sender_len);
 
-    if (received < 0) {
-      std::cerr << "Error in receiving data. Error code: " << errno << std::endl;
+    if (received == 0) {
       continue;
     }
 
-    char client_ip[INET_ADDRSTRLEN];
-    if (inet_ntop(AF_INET, &(client_address.sin_addr), client_ip, INET_ADDRSTRLEN) == nullptr) {
-      std::cerr << "Error converting client address to string." << std::endl;
-      continue;
-    }
-
-    std::cout << "Received data from " << client_ip << ":" << ntohs(client_address.sin_port)
-              << std::endl;
-
+    // std::cout << "Received packet from " << inet_ntoa(sender.sin_addr) << ": "
+    //           << std::string(buffer.data(), received) << std::endl;
     SSL_WrapperPacket packet;
     if (packet.ParseFromArray(buffer.data(), static_cast<int>(received))) {
       if (packet.has_detection()) {
@@ -93,12 +81,12 @@ int main() {
       if (packet.has_geometry()) {
         std::cout << "Received geometry packet." << std::endl;
       }
+    } else {
+      std::cout << "Failed to parse packet." << std::endl;
     }
-
-    // Clear the buffer for the next receive operation
-    std::memset(buffer.data(), 0, kBufferSize);
   }
 
-  close(sockfd);
+  close(sock);
+
   return 0;
 }
