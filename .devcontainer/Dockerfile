@@ -1,1 +1,1 @@
-FROM robocin/robocin-ines:manual-wip
+FROM robocin/robocin-ines:manual-robocup-v4
