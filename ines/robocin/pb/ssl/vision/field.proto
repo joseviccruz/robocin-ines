@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package robocin.pb.ssl.vision;
+
+message Field {
+  uint64 serial_id = 1;
+
+  float length = 2;
+  float width = 3;
+  float goal_depth = 4;
+  float goal_width = 5;
+  float penalty_area_depth = 6;
+  float penalty_area_width = 7;
+  float boundary_width = 8;
+  float goal_center_to_penalty_mark = 9;
+}

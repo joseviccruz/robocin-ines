@@ -6,7 +6,8 @@
   },
   "runArgs": [
     "-e",
-    "DISPLAY=${env:DISPLAY}"
+    "DISPLAY=${env:DISPLAY}",
+    "--network=host"
   ],
   "customizations": {
     "vscode": {

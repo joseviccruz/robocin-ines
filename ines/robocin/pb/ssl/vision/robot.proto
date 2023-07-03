@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package robocin.pb.ssl.vision;
+
+import "robocin/pb/utility/geometry.proto";
+
+message Robot {
+  enum Color {
+    COLOR_UNSPECIFIED = 0;
+    COLOR_YELLOW = 1;
+    COLOR_BLUE = 2;
+  }
+
+  Color color = 1;
+  int32 id = 2;
+
+  utility.Point2Df position = 3;
+  float angle = 4;
+
+  utility.Point2Df velocity = 5;
+  float angular_velocity = 6;
+
+  reserved 7; // TODO: Add robot acceleration.
+}
