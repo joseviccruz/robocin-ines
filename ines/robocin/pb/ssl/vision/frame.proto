@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package robocin.pb.ssl.vision;
+
+import "google/protobuf/timestamp.proto";
+import "robocin/pb/ssl/vision/ball.proto";
+import "robocin/pb/ssl/vision/field.proto";
+import "robocin/pb/ssl/vision/robot.proto";
+
+message Frame {
+  uint64 serial_id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+
+  Ball ball = 3;
+  repeated Robot robots = 4;
+
+  optional Field field = 5;
+}

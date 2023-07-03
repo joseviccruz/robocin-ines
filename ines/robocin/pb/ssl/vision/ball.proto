@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package robocin.pb.ssl.vision;
+
+import "google/protobuf/timestamp.proto";
+import "robocin/pb/ssl/vision/robot.proto";
+import "robocin/pb/utility/geometry.proto";
+
+message Ball {
+  utility.Point3Df position = 1;
+  utility.Point3Df velocity = 2;
+  reserved 3; // TODO: Add ball acceleration.
+
+  message KickInformation {
+    Robot.Color robot_color = 1;
+    int32 robot_id = 2;
+
+    utility.Point2Df start_position = 3;
+    utility.Point3Df start_velocity = 4;
+    google.protobuf.Timestamp start_timestamp = 5;
+
+    utility.Point2Df stop_position = 6;
+    google.protobuf.Timestamp stop_timestamp = 7;
+  }
+
+  optional KickInformation kick_information = 4;
+}
