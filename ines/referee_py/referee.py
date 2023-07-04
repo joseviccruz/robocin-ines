@@ -33,7 +33,9 @@ if __name__ == '__main__':
             continue
 
         if packet:
-            print(f'referee was received: {dt.datetime.now()}.')
+            print(f'{dt.datetime.now()}: referee was received.')
             publisher.send('referee', packet)
+        else:
+            print(f'No message: {len(data)}')
 
         # TODO: Sleep to reduce CPU usage.

@@ -1,10 +1,11 @@
 from typing import Optional
 
-from robocin.pb.ssl.vision.frame_pb2 import Frame
-from robocin.pb.ssl.third_party.game_controller.referee_pb2 import Referee
-from common.zmq_publish_subscribe import PubSubMode, ZmqSubscriber
-from common.recordio import RecordWriter
 from google.protobuf.any_pb2 import Any
+
+from common.recordio import RecordWriter
+from common.zmq_publish_subscribe import PubSubMode, ZmqSubscriber
+from robocin.pb.ssl.third_party.game_controller.referee_pb2 import Referee
+from robocin.pb.ssl.vision.frame_pb2 import Frame
 
 
 def parse_frame(data: bytes) -> Optional[Frame]:
@@ -24,29 +25,28 @@ def parse_referee(data: bytes) -> Optional[Referee]:
 
 
 if __name__ == '__main__':
+    vision_receiver = ZmqSubscriber('frame')
+    vision_receiver.connect('ipc:///tmp/vision.ipc')
+
+    referee_receiver = ZmqSubscriber('referee')
+    referee_receiver.connect('ipc:///tmp/referee.ipc')
+
+    record_writer = RecordWriter('log.recordio')
+
     while True:
-        vision_receiver = ZmqSubscriber('frame')
-        vision_receiver.connect('ipc:///tmp/vision.ipc')
+        frame = parse_frame(vision_receiver.receive(PubSubMode.DontWait))
+        referee = parse_referee(referee_receiver.receive(PubSubMode.DontWait))
 
-        referee_receiver = ZmqSubscriber('referee')
-        referee_receiver.connect('ipc:///tmp/referee.ipc')
+        message = Any()
 
-        record_writer = RecordWriter('log.recordio')
+        if frame:
+            print(frame)
+            message.Pack(frame)
 
-        while True:
-            frame = parse_frame(vision_receiver.receive(PubSubMode.DontWait))
-            referee = parse_referee(referee_receiver.receive(PubSubMode.DontWait))
+        if referee:
+            print(referee)
+            message.Pack(referee)
 
-            message = Any()
+        record_writer.write_protocol_message(message)
 
-            if frame:
-                print(frame)
-                message.Pack(frame)
-
-            if referee:
-                print(referee)
-                message.Pack(referee)
-
-            record_writer.write_protocol_message(message)
-
-            # TODO: Sleep to reduce CPU usage.
+        # TODO: Sleep to reduce CPU usage.
